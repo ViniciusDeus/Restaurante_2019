@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Restaurante.Models.Empresa>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Criar Novo", "Create")
+    </p>
+    <div id="divDados">
+        <table class="table" id="tabelaDados">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NomeEmpresa)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomeEmpresa)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        <button type="button" class="btn btn-link" data-item="@item.Id">Deletar</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btn-link").click(function () {
+                var id = $(this).attr('data-item');
+                var $tr = $(this).closest("tr");
+
+                if (confirm("Você tem certeza que gostaria de excluir este registro?")) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Empresa/Delete/" + id,
+                        success: function (data) {
+                                $tr.remove();
+
+                        },
+                        error: function (data) {
+                            alert("Houve um erro na pesquisa.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
